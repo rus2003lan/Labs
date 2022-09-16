@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+
+/proba
+/laba
+/laba_list
+/laba_vector
