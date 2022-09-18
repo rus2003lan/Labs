@@ -1,6 +1,7 @@
 #include "matrix.hpp"
 
-namespace matrix {
+using namespace matrix;
+
 void menu() {
     int qty_rows = 0;
     int qty_cols = 0;
@@ -9,81 +10,60 @@ void menu() {
         getnumber(qty_rows);
         std::cout << "Enter quantity of columns: ";
         getnumber(qty_cols);
-        float elem;
-        Sparse_Matrix sm;
-        sm.qty_cols = qty_cols;
-        sm.qty_rows = qty_rows;
-        std::list<std::list<std::pair<int, float>>> matrix;
-        sm.matrix = matrix;
+        float elem = 0;
+        Sparse_Matrix sm = create_matrix(qty_rows, qty_cols);
         int j = 0;
+        int column;
         for (int i = 0; i < qty_rows; ++i) {
-            std::cout << "Enter meaningful elements in a row " << i + 1<< std::endl;
-            getnumber(elem);
-            std::cout << "Enter a column of this element: ";
-            getnumber(j);
-            try {
-                correct_column(sm, j);
+            for (int j = 0; j < qty_cols; ++j) {
+                std::cout << "If you have finished typing in " << i + 1 << " line, enter zero" << std::endl;
+                std::cout << "Enter meaningful elements in a row " << i + 1 << std::endl;
+                getnumber(elem);
+                if (elem == 0) break;
+                std::cout << "Enter a column of this element: ";
+                getnumber(column);
+                insert(sm, i, column, elem);
             }
-            catch (...) {
-                std::cout << "Incorrect number of column, please, repeat input of column's number:" << std::endl;
-            }
-            insert(sm, i, j, elem);
         }
+        matrix::show(sm);
 
 	}
 }
 
-void insert(Sparse_Matrix & sm, int i, int j, float elem) {
-    auto iter = sm.matrix.begin();
-    
-}
-
-/*int getint(int *number) {
-	int check1 = scanf("%d", number);
-	int check2 = stdin_clear();
-	if (check1 == -1) return -1;
-	else if (check1 == 0 || check2 == 1) return 1;
-	else return 0;
-}
-
-int stdin_clear() {
-	char tmp;
-	int i = 0;
-	while (scanf("%1[^\n]", &tmp) == 1) i++;
-	if(i != 0) return 1;
-	scanf("%*c");
-	return 0;
-}
-
-char *get_str() {
-    char buf[81] = {0};  // BUFSIZ - константа для длины буфера
-    char *res = NULL;
-    unsigned int len = 0;
-    unsigned int n = 0;
-    do {
-        n = scanf("%80[^\n]", buf);
-        if (n < 0) {
-            if (!res) {
-                return NULL;
-            }
-        } else if (n > 0) {
-            unsigned int chunk_len = strlen(buf);
-            unsigned int str_len = len + chunk_len;
-            res = realloc(res, str_len + 1);
-            memcpy(res + len, buf, chunk_len);
-            len = str_len;
-        } else {
-            scanf("%*c");
-        }
-    } while (n > 0);
-
-    if (len > 0) {
-        res[len] = '\0';
-    } else {
-        res = calloc(1, sizeof(char));
+void matrix::insert(Sparse_Matrix & sm, int i, int j, float elem) {
+    auto iter_row = sm.matrix.begin();
+    for(int index = 1; index != i; index++) {
+        iter_row++;
     }
-
-    return res;
+    (*iter_row).push_back({j, elem});
 }
-*/
+
+Sparse_Matrix matrix::create_matrix(int qty_rows, int qty_cols) {
+    Sparse_Matrix sm;
+    sm.qty_cols = qty_cols;
+    sm.qty_rows = qty_rows;
+    std::list<std::list<std::pair<int, float>>> matrix;
+    sm.matrix = matrix;
+    auto iter = sm.matrix.begin();
+    for (int i = 0; i < qty_rows; i++) { //здесь можно юзать push_back?
+        std::list<std::pair<int, float>> row;
+        *iter = row;
+        iter++;
+    }
+    return sm;
+}
+
+void show(Sparse_Matrix & sm) {
+    std::cout << "  ";
+    for(int i = 0; i < sm.qty_cols; ++i) std::cout << i + 1 << " ";
+    std::cout << std::endl;
+    auto iter_rows = sm.matrix.begin();
+    for (int i = 0; i < sm.qty_rows; ++i) {
+        std::cout << i + 1 << " ";
+        for (auto iter_cols = (*iter_rows).begin(); iter_cols != (*iter_rows).end(); ++iter_cols) {
+            std::cout << (*iter_cols).second << " ";
+        }
+        std::cout << std::endl;
+        iter_rows++;
+    }
 }

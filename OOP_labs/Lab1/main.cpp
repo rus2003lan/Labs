@@ -1,6 +1,5 @@
 #include "matrix.hpp"
 
-using namespace matrix;
 /*int main() { 
     Sparse_Matrix sm;
     std::list<std::pair<int, int>> row1;
@@ -18,6 +17,11 @@ using namespace matrix;
 }*/
 
 int main() {
-    menu();
+    int a;
+    float b;
+    matrix::getnumber(a);
+    matrix::getnumber(b);
+    std::cout << a;
+    std::cout << " " << b;
     return 0;
 }
