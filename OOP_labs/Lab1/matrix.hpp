@@ -1,9 +1,20 @@
+#pragma once
 #include <iostream>
 #include <list>
 
 namespace matrix {
 
 struct Sparse_Matrix {
+    Sparse_Matrix(int qty_rows, int qty_cols) {
+        this->qty_cols = qty_cols;
+        this->qty_rows = qty_rows;
+        std::list<std::list<std::pair<int, float>>> matrix;
+        for (int i = 0; i < qty_rows; i++) { //здесь можно юзать push_back?
+            std::list<std::pair<int, float>> row;
+            matrix.push_back(row);
+        }
+        this->matrix = matrix;
+    }
     std::list<std::list<std::pair<int, float>>> matrix;
     int qty_rows;
     int qty_cols;
@@ -23,6 +34,7 @@ void getnumber(T &number) {
         std::cin.ignore(10000,'\n');
     }
 }
-Sparse_Matrix create_matrix(int qty_rows, int qty_cols);
-
+void new_matrix(Sparse_Matrix &sm);
+std::list<std::list<std::pair<int, float>>>::iterator find_iter(Sparse_Matrix & sm, bool positive);
+bool cmp(const std::pair<int, float> &l1, const std::pair<int, float> &l2);
 }

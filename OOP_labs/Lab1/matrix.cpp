@@ -1,32 +1,39 @@
-#include "matrix.hpp"
+/*#include "matrix.hpp"
 
 using namespace matrix;
 
-void menu() {
+void matrix::menu() {
     int qty_rows = 0;
     int qty_cols = 0;
-	while (true) {
+    int check = 1;
+	while (check) {
 		std::cout << "Enter quantity of rows: ";
         getnumber(qty_rows);
         std::cout << "Enter quantity of columns: ";
         getnumber(qty_cols);
         float elem = 0;
-        Sparse_Matrix sm = create_matrix(qty_rows, qty_cols);
-        int j = 0;
-        int column;
-        for (int i = 0; i < qty_rows; ++i) {
+        Sparse_Matrix sm(qty_rows, qty_cols);
+        int column = 0;
+        for (int row = 0; row < qty_rows; ++row) {
             for (int j = 0; j < qty_cols; ++j) {
-                std::cout << "If you have finished typing in " << i + 1 << " line, enter zero" << std::endl;
-                std::cout << "Enter meaningful elements in a row " << i + 1 << std::endl;
+                std::cout << "If you have finished typing in " << row + 1 << " line, enter zero" << std::endl;
+                std::cout << "Enter meaningful elements in a row " << row + 1 << std::endl;
                 getnumber(elem);
                 if (elem == 0) break;
                 std::cout << "Enter a column of this element: ";
                 getnumber(column);
-                insert(sm, i, column, elem);
+                insert(sm, row, column, elem);
             }
         }
         matrix::show(sm);
-
+        matrix::new_matrix(sm);
+        matrix::show(sm);
+        std::cout << "If you want to enter new matrix enter 1, if you want to exit enter 0" << std::endl;
+        getnumber(check);
+        while (check != 0 || check != 1) {
+            std::cout << "Repeat input:" << std::endl;
+            getnumber(check);
+        }
 	}
 }
 
@@ -38,22 +45,7 @@ void matrix::insert(Sparse_Matrix & sm, int i, int j, float elem) {
     (*iter_row).push_back({j, elem});
 }
 
-Sparse_Matrix matrix::create_matrix(int qty_rows, int qty_cols) {
-    Sparse_Matrix sm;
-    sm.qty_cols = qty_cols;
-    sm.qty_rows = qty_rows;
-    std::list<std::list<std::pair<int, float>>> matrix;
-    sm.matrix = matrix;
-    auto iter = sm.matrix.begin();
-    for (int i = 0; i < qty_rows; i++) { //здесь можно юзать push_back?
-        std::list<std::pair<int, float>> row;
-        *iter = row;
-        iter++;
-    }
-    return sm;
-}
-
-void show(Sparse_Matrix & sm) {
+void matrix::show(Sparse_Matrix & sm) {
     std::cout << "  ";
     for(int i = 0; i < sm.qty_cols; ++i) std::cout << i + 1 << " ";
     std::cout << std::endl;
@@ -67,3 +59,30 @@ void show(Sparse_Matrix & sm) {
         iter_rows++;
     }
 }
+
+void matrix::new_matrix(Sparse_Matrix &sm) {
+    (*sm.matrix.begin()).swap(*find_iter(sm, true));
+    (*(--sm.matrix.end())).swap(*find_iter(sm, false));
+}
+
+auto matrix::find_iter(Sparse_Matrix & sm, bool positive) {
+    auto find_iter = sm.matrix.begin();
+    int max = 0;
+    int qty_el = 0;
+    for(auto iter_rows = sm.matrix.begin(); iter_rows != sm.matrix.end(); ++iter_rows) {
+        for(auto iter_cols = (*iter_rows).begin(); iter_cols != (*iter_rows).end(); ++iter_cols) {
+            if (positive) {
+                if((*iter_cols).second > 0) ++qty_el;
+            }
+            else {
+                if((*iter_cols).second < 0) ++qty_el;
+            }
+        }
+        if(max < qty_el) {
+            max = qty_el;
+            find_iter = iter_rows;
+        }
+        qty_el = 0;
+    }
+    return find_iter;
+}*/
