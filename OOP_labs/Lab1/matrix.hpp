@@ -23,7 +23,7 @@ struct Sparse_Matrix {
 void menu();
 void insert(Sparse_Matrix & sm, int i, int j, float elem);
 void correct_column(Sparse_Matrix & sm, int j);
-void show(Sparse_Matrix & sm);
+void show(const Sparse_Matrix & sm);
 template <typename T>
 void getnumber(T &number) {
     char c;
