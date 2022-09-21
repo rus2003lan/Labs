@@ -1,7 +1,5 @@
 #include "matrix.hpp"
 
-using namespace matrix;
-
 bool matrix::cmp(const std::pair<int, float> &l1, const std::pair<int, float> &l2) {
     return l1.first < l2.first;
 }
@@ -90,9 +88,10 @@ void matrix::show(const Sparse_Matrix & sm) {
 
 std::list<std::list<std::pair<int, float>>>::iterator matrix::find_iter(Sparse_Matrix & sm, bool positive) {
     std::list<std::list<std::pair<int, float>>>::iterator find_iter = sm.matrix.begin();
+    if (!positive) ++find_iter;
     int max = 0;
     int qty_el = 0;
-    for(std::list<std::list<std::pair<int, float>>>::iterator iter_rows = sm.matrix.begin(); iter_rows != sm.matrix.end(); ++iter_rows) {
+    for(std::list<std::list<std::pair<int, float>>>::iterator iter_rows = find_iter; iter_rows != sm.matrix.end(); ++iter_rows) {
         for(std::list<std::pair<int, float>>::iterator iter_cols = (*iter_rows).begin(); iter_cols != (*iter_rows).end(); ++iter_cols) {
             if (positive) {
                 if((*iter_cols).second > 0) ++qty_el;

@@ -9,7 +9,7 @@ struct Sparse_Matrix {
         this->qty_cols = qty_cols;
         this->qty_rows = qty_rows;
         std::list<std::list<std::pair<int, float>>> matrix;
-        for (int i = 0; i < qty_rows; i++) { //здесь можно юзать push_back?
+        for (int i = 0; i < qty_rows; i++) {
             std::list<std::pair<int, float>> row;
             matrix.push_back(row);
         }
