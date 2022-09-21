@@ -5,34 +5,19 @@
 namespace arc_spiral {
 
 class Arc_spiral {
-    Arc_spiral(float k) : k(k)
-    {}
-    float get_k() {
-        return k;
-    }
-    void change_k(float k) {
-        this->k = k;
-    }
-    float distance(float phi) {
-        return k * phi;
-    }
-    float seg_square(float r1, float r2) {
-        float phi = abs(r1 / k - r2 / k);
-        return phi * (pow(r1, 2) + pow(r2, 2) + r1 * r2) / 6;
-    }
-    float coil_square(int n) {
-        return M_PI * (pow(n, 2) + n * (n -1) + pow(n - 1, 2)) / 3;
-    }
-    float ring_square(int n) {
-        return 2 * n * M_PI;
-    }
-    float arc_len(float phi) {
-        return k / 2 * (phi * sqrt(pow(phi, 2) + 1) + std::log(phi + sqrt(pow(phi, 2) + 1)));
-    }
-    float curv_radius(float phi) {
-        return k * pow(pow(phi, 2) + 1, 1.5) / (pow(phi, 2) + 2);
-    }
-    float k;
+    public: 
+        Arc_spiral(float k) : k(k)
+        {}
+        Arc_spiral & set_k(float k);
+        float get_k();
+        float distance(float phi);
+        float seg_square(float r1, float r2);
+        float coil_square(float n);
+        float ring_square(float n);
+        float arc_len(float phi);
+        float curv_radius(float phi);
+    private:
+        float k;
 };
 
 void menu();
@@ -46,5 +31,6 @@ void getnumber(T &number) {
         std::cin.ignore(10000,'\n');
     }
 }
+void get_parameter(float &k);
 
 }
