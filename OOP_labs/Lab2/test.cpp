@@ -26,7 +26,6 @@ TEST_CASE("Math") {
     REQUIRE(abs(45 - as.distance(phi)) <= err);
     REQUIRE(abs(6603.33 - as.seg_square(r1, r2)) <= err);
     REQUIRE(abs(283.791 - as.coil_square(n)) <= err);
-    REQUIRE(abs(283.791 - as.ring_square(n)) <= err);
     REQUIRE(abs(84.7896 - as.arc_len(phi)) <= err);
     REQUIRE(abs(43.122 - as.curv_radius(phi)) <= err);
 }

@@ -59,7 +59,7 @@ void menu() {
         else if (check == 6) {
             std::cout << "Input n:" << std::endl;
             get_parameter(n);
-            std::cout << "Ring square: " << as.coil_square(n) << std::endl;
+            std::cout << "Ring square: " << as.ring_square(n) << std::endl;
         }
         else if (check == 7) {
             std::cout << "Input angle phi:" << std::endl;
