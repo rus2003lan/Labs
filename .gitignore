@@ -36,5 +36,7 @@
 /aisd_labs/Lab2/laba_vector
 *proba
 *main
-/OOP_labs/.vscode
-
+*.vscode
+*build
+*googletest
+*test
