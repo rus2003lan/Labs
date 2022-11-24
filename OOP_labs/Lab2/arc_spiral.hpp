@@ -8,13 +8,13 @@ class Arc_spiral {
         Arc_spiral(float k) : k(k)
         {}
         Arc_spiral & set_k(float k);
-        float get_k();
-        float distance(float phi);
-        float seg_square(float r1, float r2);
-        float coil_square(float n);
-        float ring_square(float n);
-        float arc_len(float phi);
-        float curv_radius(float phi);
+        float get_k() const;
+        float distance(float phi) const;
+        float seg_square(float r1, float r2) const;
+        float coil_square(float n) const;
+        float ring_square(float n) const;
+        float arc_len(float phi) const;
+        float curv_radius(float phi) const;
     private:
         float k;
 };

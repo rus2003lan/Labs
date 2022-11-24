@@ -40,3 +40,6 @@
 *build
 *googletest
 *test
+*.idea
+cmake-build-debug
+

@@ -86,26 +86,26 @@ Arc_spiral & Arc_spiral::set_k(float k) {
     this->k = k;
     return *this;
 }
-float Arc_spiral::get_k() {
+float Arc_spiral::get_k() const{
     return k;
 }
-float Arc_spiral::distance(float phi) {
+float Arc_spiral::distance(float phi) const{
     return k * phi;
 }
-float Arc_spiral::seg_square(float r1, float r2) {
+float Arc_spiral::seg_square(float r1, float r2) const{
     float phi = abs(r1 / k - r2 / k);
     return phi * (pow(r1, 2) + pow(r2, 2) + r1 * r2) / 6;
 }
-float Arc_spiral::coil_square(float n) {
+float Arc_spiral::coil_square(float n) const{
     return M_PI * (pow(n, 2) + n * (n -1) + pow(n - 1, 2)) / 3;
 }
-float Arc_spiral::ring_square(float n) {
+float Arc_spiral::ring_square(float n) const{
     return 2 * n * M_PI;
 }
-float Arc_spiral::arc_len(float phi) {
+float Arc_spiral::arc_len(float phi) const{
     return k / 2 * (phi * sqrt(pow(phi, 2) + 1) + std::log(phi + sqrt(pow(phi, 2) + 1)));
 }
-float Arc_spiral::curv_radius(float phi) {
+float Arc_spiral::curv_radius(float phi) const{
     return k * pow(pow(phi, 2) + 1, 1.5) / (pow(phi, 2) + 2);
 }
 
