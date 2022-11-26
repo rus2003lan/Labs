@@ -8,4 +8,4 @@ include_directories(.)
 add_executable(Lab3
         main.cpp
         number16.cpp
-        number16.hpp test.cpp catch.hpp)
+        number16.hpp functions.cpp)

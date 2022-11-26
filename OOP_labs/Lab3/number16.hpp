@@ -6,10 +6,9 @@
 
 namespace number16 {
 
+void bin_to_hex(char * bin);
 void dec_to_bin(int number, char *bin);
 int bin_to_dec(char *numbers);
-char *bin_to_hex(char *numbers);
-char *add_to_right(char *right);
 void right_to_add(char *right);
 void menu();
 void get_parameter(int &parameter);
@@ -35,9 +34,9 @@ class Number16 {
         bool operator ==(const Number16 & second) const;
         bool operator !=(const Number16 & second) const;
         bool is_honest() const;
-    private:
+    public:
         int qty;
-        char * numbers;
+        char numbers [31];
 };
 
 template <typename T>
