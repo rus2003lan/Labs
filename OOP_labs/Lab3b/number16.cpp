@@ -3,30 +3,48 @@
 namespace number16 {
 
 Number16::Number16() {
-    int n = 31;
-    qty = n;
-    strcpy(numbers, "000000000000000000000000000000");
+    qty = QTY;
+    numbers = new char [QTY];
 }
 Number16::Number16(int number) {
-    int n = 31;
-    qty = n;
+    qty = QTY;
+    numbers = new char [QTY];
     dec_to_bin(number, numbers);
 }
 Number16::Number16(char *nums) {
-    int n = 31;
-    qty = n;
+    qty = QTY;
+    numbers = new char [QTY];
     strcpy(numbers, nums);
 }
-/*void Number16::print() const{
-    std::cout << bin_to_hex(numbers) << std::endl;
-}*/
 
-/*char *Number16::get_number() const {
-    return bin_to_hex(numbers);
-}*/
+Number16::~Number16() {
+    delete [] numbers;
+}
+
+Number16::Number16(Number16 const & number) {
+    numbers = new char [number.qty];
+    qty = number.qty;
+    strcpy(numbers, number.numbers);
+}
+
+void Number16::print() const{
+    char hex[(QTY - 1) / 4 + 1];
+    bin_to_hex(numbers, hex);
+    std::cout << hex << std::endl;
+}
+
+Number16 & Number16::operator =(Number16 const & number) {
+    if (this != &number) {
+        delete [] numbers;
+        qty = number.qty;
+        numbers = new char [qty];
+        strcpy(numbers, number.numbers);
+    }
+    return *this;
+}
 
 Number16 &Number16::operator +=(const Number16 &term) {
-    char copy [31];
+    char copy [QTY];
     strcpy(copy, term.numbers);
     right_to_add(copy);
     right_to_add(numbers);
@@ -34,7 +52,7 @@ Number16 &Number16::operator +=(const Number16 &term) {
     char * b = numbers;
     char c = '0';
     char pred = '0';
-    for(int i = 29; i >= 0; i--) {
+    for(int i = QTY - 1; i >= 0; i--) {
         pred = numbers[i];
         numbers[i] = (numbers[i] + copy[i] + c) % 2 + 48;
         if (pred == '1' && copy[i] == '1' || pred == '1' && c == '1' || copy[i] == '1' && c == '1') c = '1';
@@ -48,8 +66,8 @@ Number16 Number16::operator +(const Number16 &number) const{
     sum += number;
     return sum;
 }
-Number16 Number16::operator -=(const Number16 &number) {
-    char copy [31];
+Number16 &Number16::operator -=(const Number16 &number) {
+    char copy [QTY];
     strcpy(copy, number.numbers);
     if (copy[0] == '0') copy[0] = '1';
     else copy[0] = '0';
@@ -63,13 +81,12 @@ Number16 Number16::operator -(const Number16 &number) const{
     return dif;
 }
 Number16 Number16::operator <<(int shift) {
-    if (shift > qty || shift < 0) throw "Uncorrect shift";
     char new_numbers [qty];
     new_numbers[0] = numbers[0];
     for(int i = 1; i < qty - shift; i++) {
         new_numbers[i] = numbers[i + shift];
     }
-    for (int i = 1; i <= shift; i++) {
+    for (int i = 0; i <= shift + 1; i++) {
         new_numbers[qty - i - 1] = '0';
     }
     strcpy(numbers, new_numbers);
@@ -77,7 +94,6 @@ Number16 Number16::operator <<(int shift) {
 }
 
 Number16 Number16::operator >>(int shift) {
-    if (shift > qty || shift < 0) throw "Uncorrect shift";
     char new_numbers [qty];
     new_numbers[0] = numbers[0];
     for(int i = 1; i < qty - shift - 1; i++) {
@@ -120,7 +136,8 @@ bool Number16::operator ==(const Number16 & second) const{
 }
 
 bool Number16::operator <=(const Number16 & second) const {
-    return !(*this > second);
+    bool e = !(*this > second);
+    return e;
 }
 
 bool Number16::operator >=(const Number16 & second) const {
@@ -135,8 +152,8 @@ bool Number16::operator !=(const Number16 & second) const{
     return !(*this == second);
 }
 
-/*int Number16::get_number10() const {
-    return bin_to_dec(numbers);
-}*/
+int Number16::get_number10() const {
+    return number16::bin_to_dec(numbers);;
+}
 
 }

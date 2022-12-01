@@ -1,29 +1,32 @@
 #pragma once
 
+#define QTY 29
+
 #include <iostream>
 #include <cstring>
-#include <exception>
+#include <cmath>
 
 namespace number16 {
 
-void bin_to_hex(char * bin);
+void bin_to_hex(const char * bin, char *hex);
 void dec_to_bin(int number, char *bin);
-int bin_to_dec(char *numbers);
+int bin_to_dec(const char *numbers);
 void right_to_add(char *right);
+size_t size(char *nums);
 void menu();
 void get_parameter(int &parameter);
 
 class Number16 {
     public:
         Number16();
-        Number16(int number);
+        Number16(int number = 0);
         Number16(char *nums);
         void print() const;
         char *get_number16() const;
-        char *get_number10() const;
+        int get_number10() const;
         Number16 &operator +=(const Number16 &term);
         Number16 operator +(const Number16 &number) const;
-        Number16 operator -=(const Number16 &number);
+        Number16 &operator -=(const Number16 &number);
         Number16 operator -(const Number16 &number) const;
         Number16 operator <<(int shift);
         Number16 operator >>(int shift);
@@ -35,8 +38,8 @@ class Number16 {
         bool operator !=(const Number16 & second) const;
         bool is_honest() const;
     public:
-        int qty;
-        char numbers [31];
+        size_t qty;
+        char numbers [QTY];
 };
 
 template <typename T>

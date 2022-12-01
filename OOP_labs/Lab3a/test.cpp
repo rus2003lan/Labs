@@ -2,20 +2,24 @@
 #include "catch.hpp"
 #include "number16.hpp"
 
-/*TEST_CASE("Constructor") {
+TEST_CASE("Constructor") {
     number16::Number16 a = 8;
     number16::Number16 b = -8;
-    number16::Number16 c("100000000000000000000000000100");
-    number16::Number16 d("000000000000000000000000000100");
-    char a1 [31] = ""; // тут должен быть hex
-    char b1 [31] = ""; // тут должен быть hex
+    number16::Number16 x = -1040;
+    number16::Number16 c("10000000000000000000000001000");
+    number16::Number16 d("00000000000000000000000001000");
+    number16::Number16 x1("10000000000000000010000010000");
     int c1 = -8;
     int d1 = 8;
-    REQUIRE(!(compare(a.get_number16(), a1)));
-    REQUIRE(!(compare(b.get_number(), b1)));
+    int x2 = -1040;
+    int rr = b.get_number10();
     REQUIRE(c1 == c.get_number10());
     REQUIRE(d1 == d.get_number10());
-}*/
+    REQUIRE(c1 == b.get_number10());
+    REQUIRE(d1 == a.get_number10());
+    REQUIRE(x2 == x1.get_number10());
+    REQUIRE(x2 == x.get_number10());
+}
 
 TEST_CASE("Arithmetic") {
     number16::Number16 a = 8;
@@ -23,9 +27,9 @@ TEST_CASE("Arithmetic") {
     number16::Number16 b3 = 100;
     number16::Number16 c = -38;
     number16::Number16 c_b3 = 62;
-    number16::Number16 d = -212;
+    number16::Number16 d = -12;
     number16::Number16 a_b = 18;
-    number16::Number16 c_d = -250;
+    number16::Number16 c_d = -50;
     number16::Number16 b_c = -28;
     number16::Number16 d2 = -212;
     REQUIRE(a + b == a_b);
@@ -52,6 +56,9 @@ TEST_CASE("Compare") {
     number16::Number16 d = -212;
     number16::Number16 e = -212;
     number16::Number16 d2 = 10;
+    number16::Number16 i1 = 111221;
+    number16::Number16 i2 = -111221;
+    number16::Number16 i3 = -111222;
     REQUIRE(b > a);
     REQUIRE(!(b > be));
     REQUIRE(a > c);
@@ -86,4 +93,8 @@ TEST_CASE("Compare") {
     REQUIRE(b >= c);
     REQUIRE(d >= e);
     REQUIRE(b >= be);
+    REQUIRE(!(i1.is_honest()));
+    REQUIRE(!(i2.is_honest()));
+    REQUIRE(i3.is_honest());
+    REQUIRE(b.is_honest());
 }
