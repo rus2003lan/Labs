@@ -2,10 +2,6 @@
 
 namespace number16 {
 
-Number16::Number16() {
-    qty = QTY;
-    strcpy(numbers, "000000000000000000000000000000");
-}
 Number16::Number16(int number) {
     qty = QTY;
     dec_to_bin(number, numbers);

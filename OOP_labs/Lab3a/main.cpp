@@ -8,6 +8,5 @@ int main () {
         number16::get_parameter(check);
         if (check == 2) break;
     }
-
     return 0;
 }

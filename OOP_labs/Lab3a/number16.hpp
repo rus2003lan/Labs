@@ -18,12 +18,8 @@ void get_parameter(int &parameter);
 
 class Number16 {
     public:
-        Number16();
         Number16(int number = 0);
         Number16(char *nums);
-        void print() const;
-        char *get_number16() const;
-        int get_number10() const;
         Number16 &operator +=(const Number16 &term);
         Number16 operator +(const Number16 &number) const;
         Number16 &operator -=(const Number16 &number);
@@ -37,6 +33,8 @@ class Number16 {
         bool operator ==(const Number16 & second) const;
         bool operator !=(const Number16 & second) const;
         bool is_honest() const;
+        void print() const;
+        int get_number10() const;
     public:
         size_t qty;
         char numbers [QTY];
