@@ -10,7 +10,6 @@ namespace number16 {
             else bin[i] = '1';
             number /= 2;
         }
-        //bin[QTY] = '\0';
     }
 
     void right_to_add(char *right) {
