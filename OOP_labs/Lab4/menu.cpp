@@ -6,10 +6,9 @@ namespace company {
         std::string name;
         std::cout << "Enter company name: " << std::endl;
         std::getline(std::cin, name);
-        std::cout << name;
         std::vector<std::pair<int, Employee *>> table;
         std::vector<Department> deps;
-        Company company(name, table, deps);
+        Company company(std::move(name), std::move(table), std::move(deps));
         while (check != 6) {
             std::cout << "Choose what you want to do: " << std::endl;
             std::cout << "1) Show employees" << std::endl;
@@ -18,12 +17,13 @@ namespace company {
             std::cout << "4) Fire an employee" << std::endl;
             std::cout << "5) Add an employee" << std::endl;
             std::cout << "6) Exit" << std::endl;
-            getnumber(check);
+            get_number(check);
             while (check < 1 || check > 6) {
                 std::cout << "Repeat input:" << std::endl;
-                getnumber(check);
+                get_number(check);
             }
             if (check == 1) {
+                company.show();
             }
             else if (check == 2) {
             }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <utility>
 #include <typeinfo>
@@ -9,22 +10,27 @@
 namespace company {
 
     void menu();
-    void get_parameter(int &parameter);
+
+    static int count = 0;
 
     class Employee {
         public:
-            Employee(std::string name, std::string birth_year, std::string education,
-                     std::string post = "Employee", float salary = 0) : name(name), birth_year(birth_year),
-                     education(education), post(post), salary(salary) {};
-            Employee & operator =(const Employee &emp);
+            Employee() = default;
+            Employee(std::string&& name, std::string&& birth_year, std::string&& education, std::string&& post = "Employee", float salary = 0)
+                : name(name), birth_year(birth_year), education(education), post(post), salary(salary) {};
+            Employee & operator =(Employee const &emp);
+            Employee & operator =(Employee &&emp) noexcept;
             Employee(const Employee &emp);
-            std::string info() const;
-            std::string get_post() const;
-            void set_post(std::string post);
-            float get_salary() const;
-            void set_salary(const float salary);
+            Employee(Employee &&emp) noexcept;
+            ~Employee() = default;
+            [[nodiscard]] std::string info() const;
+            [[nodiscard]] std::string get_post() const;
+            void set_post(std::string&& new_post);
+            [[nodiscard]] float get_salary() const;
+            void set_salary(float const &new_salary);
             void to_super();
-        private:
+            void swap(Employee &emp);
+        protected:
             std::string name;
             std::string birth_year;
             std::string education;
@@ -34,15 +40,17 @@ namespace company {
 
     class Department {
     public:
-        Department(std::string name, std::vector<std::pair<int, Employee *>> table) : name(name), table(table) {};
-        Department & operator =(const Department &dep);
-        Department(const Department &dep);
-        void info() const;
-        void add_emp(Employee & emp);
-        Employee &find_emp(int id) const;
+        Department() = default;
+        Department(std::string&& name, std::vector<std::pair<int, Employee *>>&& table) : name(name), table(table) {};
+        Department & operator =(Department const &dep);
+        Department & operator =(Department &&dep) noexcept;
+        Department(Department const &dep);
+        Department(Department &&dep) noexcept;
+        void swap(Department &dep);
+        [[nodiscard]] std::string info() const;
         void del_emp(int id);
         void show() const;
-    private:
+    protected:
         std::string name;
         std::vector<std::pair<int, Employee *>> table;
     };
@@ -51,27 +59,35 @@ namespace company {
     private:
         std::vector<Department> deps;
     public:
-        Company(std::string name, std::vector<std::pair<int, Employee *>> table, std::vector<Department> deps) : Department(name, table), deps(deps) {};
-        Company & operator =(const Company &company);
-        Company(const Company &company);
+        Company(std::string&& name, std::vector<std::pair<int, Employee *>>&& table, std::vector<Department>&& deps)
+            : Department(std::move(name), std::move(table)), deps(deps) {};
+        Company & operator =(Company const &company);
+        Company(Company const &company);
         Department &get_dep(std::string name);
-        size_t count_deps() const;
+        Company(Company &&company) noexcept;
+        Company & operator =(Company &&company) noexcept;
+        void swap(Company &company);
+        [[nodiscard]] Employee &&find_emp(int id) const;
+        void add_emp(Employee & emp, std::string&& dep);
+        void del_emp(int id);
     };
 
     class Superuser : public Employee {
     private:
         Department * dep;
     public:
-        Superuser(std::string name, std::string birth_year, std::string education, Department *dep,
-                  std::string post = "Superuser", float salary = 0) : Employee(name, birth_year, education, post, salary), dep(dep) {};
-        /*Company & operator =(const Company &company);
-        Company(const Company &company);
-        Department &get_dep(std::string name);*/
-        size_t count_deps();
+        Superuser(std::string&& name, std::string&& birth_year, std::string&& education, Department *dep,
+                  std::string&& post = "Superuser", float salary = 0) : Employee(std::move(name), std::move(birth_year), std::move(education), std::move(post), salary), dep(dep) {};
+        Superuser & operator =(Superuser const &super);
+        Superuser & operator =(Superuser &&super) noexcept;
+        Superuser(Superuser const &super);
+        Superuser(Superuser &&super) noexcept;
+        void swap(Superuser &super);
+        Department &get_dep(std::string name);
     };
 
     template <typename T>
-    void getnumber(T &number) {
+    void get_number(T &number) {
         char c;
         while(!(std::cin >> number) || std::cin.get(c) && c != '\n') {
             c = 0;
