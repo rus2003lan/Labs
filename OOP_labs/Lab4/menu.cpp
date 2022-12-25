@@ -32,7 +32,29 @@ namespace company {
             else if (check == 4) {
             }
             else if (check == 5) {
+                Employee emp = get_emp();
+                company.add_emp(get_emp());
             }
         }
+    }
+
+    Employee &get_emp() {
+        std::string name;
+        std::string birth_year;
+        std::string education;
+        std::string post;
+        float salary;
+        std::cout << "Input name of employee: ";
+        std::cin >> name;
+        std::cout << std::endl << "Input birth_year of employee: ";
+        std::cin >> birth_year;
+        std::cout << std::endl << "Input education of employee: ";
+        std::cin >> education;
+        std::cout << std::endl << "Input post of employee: ";
+        std::cin >> post;
+        std::cout << std::endl << "Input birth_year of employee: ";
+        std::cin >> salary;
+        Employee emp(std::move(name), std::move(birth_year), std::move(education), std::move(post), salary);
+        return emp;
     }
 }
