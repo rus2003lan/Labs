@@ -25,19 +25,6 @@ namespace company {
         std::swap(salary, emp.salary);
     }
 
-    Employee::Employee(const Employee &emp) {
-        name = emp.name;
-        birth_year = emp.birth_year;
-        education = emp.education;
-        post = emp.post;
-        salary = emp.salary;
-    }
-
-    Superuser &&Employee::to_super(Department *dep) {
-        Superuser super(*this, dep);
-        return std::move(super);
-    }
-
     std::string Employee::get_name() const{
         return name;
     }
@@ -95,11 +82,6 @@ namespace company {
         return *this;
     }
 
-    Department::Department(Department const &dep) {
-        name = dep.name;
-        table = dep.table;
-    }
-
     Department::Department(Department &&dep) noexcept{
         swap(dep);
     }
@@ -109,7 +91,7 @@ namespace company {
     }
 
     void Department::set_name(std::string&& new_name)  {
-        name= new_name;
+        name = new_name;
     }
 
     void Department::show() const {
@@ -132,61 +114,54 @@ namespace company {
         std::swap(table, dep.table);
     }
 
-    /*void Department::add_emp(Employee & emp) {
-        std::pair<int, Employee *> pair = {count, &emp};
+    void Department::add_emp(int id, Employee &emp) {
+        std::pair<int, Employee *> pair = {id, &emp};
         table.push_back(pair);
         std::sort(table.begin(), table.end());
-    }*/
+    }
 
+    std::vector<std::pair<int, Employee *>>::iterator Department::get_emp_it(int id) {
+        auto it = table.begin();
+        for(; it != table.end() || (*it).first != id; it++) {}
+        return it;
+    }
 
+    Employee &Department::get_emp(int id) {
+        if (id < 0) throw std::invalid_argument("Incorrect id");
+        auto it = get_emp_it(id);
+        if (it == table.end()) throw std::invalid_argument("No employee with this id");
+        return *(*it).second;
+    }
 
+    void Department::del_emp(int id) {
+        if (id < 0) throw std::invalid_argument("Incorrect id");
+        auto it = get_emp_it(id);
+        if (it == table.end()) throw std::invalid_argument("No employee with this id");
+        table.erase(it);
+    }
 
-    Employee & Company::find_emp(int id) {
-        if (id < 0 || id > count) throw std::invalid_argument("Incorrect id");
-        std::vector<std::pair<int, Employee *>> my_table = get_table();
-        for(auto it = my_table.begin(); it != my_table.end(); it++) {
-            if ((*it).first == id) {
-                return *(*it).second;
-            }
+    void Department::to_super(int id) {
+        try {
+            Employee &emp = get_emp(id);
+            Superuser super(std::move(emp), this);
+            emp = super; // ??? как это лучше сделать
+        }
+        catch (const std::invalid_argument & msg){
+            throw msg;
         }
     }
 
-    void Company::del_emp(int id) {
-        if (id < 0 || id > count) throw std::invalid_argument("Incorrect id");
-        std::vector<std::pair<int, Employee *>> my_table = get_table();
-        auto it = my_table.begin();
-        for(it; it != my_table.end(); it++) {
-            if ((*it).first == id) {
-               break;
-            }
-        }
-        for(auto it2 = it + 1; it2 != my_table.end(); it2++) {
-            --(*it2).first;
-        }
-        my_table.erase(it);
-        --count;
-    }
 
-    /*Company & Company::operator =(Company const &company) {
+
+
+
+
+
+
+    Company & Company::operator =(Company const &company) {
         if (this == &company) return *this;
         Company(company).swap(*this);
         return *this;
-    }*/
-
-    Department &Company::get_dep(const std::string &dep_name) {
-        for(auto it = deps.begin(); it != deps.end(); ++it) {
-            if ((*it).get_name() == dep_name) {
-                return *it;
-            }
-        }
-        throw std::invalid_argument("No such department");
-    }
-
-    void Company::set_deps(std::vector<Department> &&new_deps) {
-        deps = new_deps;
-    }
-    std::vector<Department> &Company::get_deps() {
-        return deps;
     }
 
     Company::Company(Company &&company) noexcept {
@@ -199,46 +174,95 @@ namespace company {
     }
 
     void Company::swap(Company &company) {
-        std::string tmp = get_name();
-        set_name(company.get_name());
-        company.set_name(std::move(tmp));
-        std::vector<std::pair<int, Employee *>> tmp0 = get_table();
-        set_table(std::move(company.get_table()));
-        company.set_table(std::move(tmp0));
+        std::swap(name, company.name);
         std::swap(deps, company.deps);
     }
 
+    std::string &Company::get_name() {
+        return name;
+    }
+
+    void Company::set_name(std::string &&new_name) {
+        name = new_name;
+    }
+
+    Employee & Company::get_emp(int id) {
+        try {
+            Employee &emp = get_dep(id).get_emp(id);
+        }
+        catch (const std::invalid_argument &msg) {
+            throw msg;
+        }
+    }
+
     void Company::add_emp(Employee & emp, const std::string &dep_name) {
-        std::pair<int, Employee *> pair = {count, &emp};
-        std::vector<std::pair<int, Employee *>> my_table = get_table();
-        my_table.push_back(pair);
-        std::sort(my_table.begin(), my_table.end());
-        //add_to_dep(emp, get_dep(dep_name));
-        std::vector<Department> a;
-        Company depr(get_dep(get_name()), a);
+        try {
+            get_dep(dep_name).add_emp(count, emp);
+        }
+        catch (const std::invalid_argument &msg) {
+            throw msg;
+        }
         ++count;
     }
 
-    //void Company::add_to_dep(Employee &emp, Department &dep) {
-      //  dep.get_table()
-    //}
+    void Company::to_super(int id) {
+        try {
+            get_dep(id).to_super(id);
+        }
+        catch (const std::invalid_argument &msg) {
+            throw msg;
+        }
+    }
+
+    void Company::del_emp(int id) {
+        try {
+            get_dep(id).to_super(id);
+        }
+        catch (const std::invalid_argument &msg) {
+            throw msg;
+        }
+        --count;
+    }
+
+    void Company::set_deps(std::vector<Department> &&new_deps) {
+        deps = new_deps;
+    }
+    std::vector<Department> &Company::get_deps() {
+        return deps;
+    }
+
+    Department &Company::get_dep(const std::string &dep_name) {
+        for(auto it = deps.begin(); it != deps.end(); ++it) {
+            if ((*it).get_name() == dep_name) {
+                return *it;
+            }
+        }
+        throw std::invalid_argument("No such department");
+    }
+
+    Department &Company::get_dep(int id) {
+        if (id < 0 || id >= count) throw std::invalid_argument("No employee with this id");
+        for(auto it_dep = deps.begin(); it_dep != deps.end(); ++it_dep) {
+            try {
+                (*it_dep).get_emp(id);
+                return *it_dep;
+            }
+            catch(const std::invalid_argument &msg) {}
+        }
+        throw std::invalid_argument("No employee with this id");
+    }
 
 
 
 
-    /*Superuser & Superuser::operator =(Superuser const &superuser) {
+
+
+    Superuser & Superuser::operator =(Superuser const &superuser) {
         if (this == &superuser) return *this;
         Superuser(superuser).swap(*this);
         return *this;
-    }*/
-
-    Department *Superuser::get_dep() {
-        return dep;
     }
 
-    void Superuser::set_dep(Department *new_dep) {
-        dep = new_dep;
-    }
 
     Superuser::Superuser(Superuser &&superuser) noexcept {
         swap(superuser);
@@ -266,5 +290,13 @@ namespace company {
         set_salary(superuser.get_salary());
         superuser.set_salary(tmp0);
         std::swap(dep, superuser.dep);
+    }
+
+    void Superuser::set_dep(Department *new_dep) {
+        dep = new_dep;
+    }
+
+    Department *Superuser::get_dep() {
+        return dep;
     }
 }

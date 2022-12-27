@@ -6,9 +6,8 @@ namespace company {
         std::string name;
         std::cout << "Enter company name: " << std::endl;
         std::getline(std::cin, name);
-        std::vector<std::pair<int, Employee *>> table;
         std::vector<Department> deps;
-        Company company(std::move(name), std::move(table), std::move(deps));
+        Company company(std::move(name), std::move(deps));
         while (check != 6) {
             std::cout << "Choose what you want to do: " << std::endl;
             std::cout << "1) Show employees" << std::endl;
@@ -23,7 +22,7 @@ namespace company {
                 get_number(check);
             }
             if (check == 1) {
-                company.show();
+                //company.show();
             }
             else if (check == 2) {
             }
@@ -33,7 +32,7 @@ namespace company {
             }
             else if (check == 5) {
                 Employee emp = get_emp();
-                company.add_emp(get_emp());
+                //company.add_emp(emp);
             }
         }
     }
